@@ -25,10 +25,28 @@ def index_articles():
 
     pass
 
-@app.route('/articles/<int:id>')
+@app.route('/articles/<int:id>', methods=['GET'])
 def show_article(id):
+    # Step 1: Find the article by ID
+    article = Article.query.get(id)
+    if not article:
+        return make_response({'error': 'Article not found'}, 404)
 
-    pass
+    # Step 2: Initialize session page_views if not already set
+    if 'page_views' not in session:
+        session['page_views'] = 0
+
+    # Step 3: Increment the page view count
+    session['page_views'] += 1
+
+    # Step 4: Check if the user has exceeded the limit
+    if session['page_views'] <= 3:
+        # They haven't exceeded — return article data
+        return jsonify(article.to_dict()), 200
+    else:
+        # They exceeded the limit — return error and status 401
+        return make_response({'message': 'Maximum pageview limit reached'}, 401)
+
 
 if __name__ == '__main__':
     app.run(port=5555)
