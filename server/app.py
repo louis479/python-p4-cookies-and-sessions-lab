@@ -48,5 +48,5 @@ def show_article(id):
         return make_response({'message': 'Maximum pageview limit reached'}, 401)
 
 
-if __name__ == '__main__':
-    app.run(port=5555)
+# if __name__ == '__main__':
+#     app.run(port=5555)
